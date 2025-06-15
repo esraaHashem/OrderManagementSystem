@@ -1,4 +1,6 @@
-﻿namespace OrderManagementSystem.Application.Discounting;
+﻿using OrderManagementSystem.Core;
+
+namespace OrderManagementSystem.Application.Discounting;
 
 public class LoyalCustomerDiscount : IDiscountStrategy
 {
@@ -8,10 +10,11 @@ public class LoyalCustomerDiscount : IDiscountStrategy
     public decimal ApplyDiscount(decimal amount, List<Core.Order> orderHistory)
     {
         decimal baseDiscountedAmount = amount * BaseDiscount;
-        decimal extraDiscountPercentage = ApplyExtraDiscount(orderHistory);
-        decimal extraDiscountedAmount = amount * (extraDiscountPercentage / 100M);
 
-        return Math.Max((baseDiscountedAmount - extraDiscountedAmount), amount - Constants.MAX_DISCOUNT);
+        decimal extraDiscountInPercentage = ApplyExtraDiscount(orderHistory);
+        baseDiscountedAmount *= (1 - extraDiscountInPercentage / 100M);
+
+        return baseDiscountedAmount;
     }
 
     //extra discount implemetation would be different depends on business logic
@@ -22,8 +25,12 @@ public class LoyalCustomerDiscount : IDiscountStrategy
         var recentOrders = orderHistory.Where(order => order.OrderDate >= discountEligibilityCutoff)
             .ToList();
 
-        decimal extraDiscount = DiscountRules.DISCOUNTS_OVER_PURCHASES_HISTORY
-                                 .Where(x => recentOrders.Count >= x.Key)
+        if (!DiscountRules.DISCOUNTS_OVER_PURCHASES_HISTORY.TryGetValue(CustomerType.Loyal, out var discountTiers))
+        {
+            return 0m;
+        }
+
+        decimal extraDiscount = discountTiers.Where(x => recentOrders.Count >= x.Key)
                                  .OrderByDescending(x => x.Key)
                                  .Select(x => x.Value)
                                  .DefaultIfEmpty(0m)
