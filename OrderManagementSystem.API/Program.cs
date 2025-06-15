@@ -13,7 +13,8 @@ builder.AddJWTAuthentication()
        .AddAppDBContext()
        .AddSwaggerDocumentation()
        .AddAppCustomExceptionHandler()
-       .AddServices();
+       .AddServices()
+       .AddRateLimiting();
 
 var app = builder.Build();
 
@@ -25,6 +26,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandler();
+
+app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 

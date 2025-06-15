@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OrderManagementSystem.Application.Discounting;
 using OrderManagementSystem.Application.Order;
 using OrderManagementSystem.Infrastructure.Data;
 using System.Reflection;
 using System.Text;
+using System.Threading.RateLimiting;
 
 namespace OrderManagementSystem.API
 {
@@ -103,6 +103,31 @@ namespace OrderManagementSystem.API
             });
 
             return builder.Services;
+        }
+
+        /// <summary>
+        /// For prevent apis from abuse rate limiting is added
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddRateLimiting(this IServiceCollection services)
+        {
+            //configure rate limiting here permit 10 requests within 30 sec more if user hits 11 requests with the 30 sec, response 503 is returned
+            services.AddRateLimiter(options =>
+            {
+                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+                        factory: partition => new FixedWindowRateLimiterOptions
+                        {
+                            AutoReplenishment = true,
+                            PermitLimit = 10,
+                            QueueLimit = 0,
+                            Window = TimeSpan.FromSeconds(30)
+                        }));
+            });
+
+            return services;
         }
     }
 }
