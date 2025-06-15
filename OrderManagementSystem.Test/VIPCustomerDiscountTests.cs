@@ -52,4 +52,35 @@ public class VIPCustomerDiscountTests
         // Assert
         Assert.AreEqual(152M, discountedAmount);
     }
+
+    [TestMethod]
+    public void WhenVIPPurchasesAre100OrdersOverLastThreeYearThenNoExtraDiscountIsApplied()
+    {
+        // Arrange
+        var sut = new VIPCustomerDiscount();
+        decimal amount = 200M;  //200*0.80 = 160 , 160 * 1-(5/100) = 152
+
+        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyYears: 4);
+
+        // Act
+        var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
+
+        // Assert
+        Assert.AreEqual(160M, discountedAmount);
+    }
+
+    [TestMethod]
+    public void WhenVIPPurchasesAre500OrdersOverLastYearThenDiscount25IsApplied()
+    {
+        // Arrange
+        decimal amount = 1000M;
+        List<Order> orderHistory = TestDataGenerator.GetOrders(500, 1);
+        var sut = new VIPCustomerDiscount();
+
+        // Act
+        var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
+
+        // Assert : its should be 160 as it equals to 1000 * 0.80M = 800, extra discount is 25% then 800*0.75 = 600
+        Assert.AreEqual(600M, discountedAmount);
+    }
 }
