@@ -17,6 +17,12 @@ namespace OrderManagementSystem.API.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// endpoint to authenticate user and get token to be used of his coming requests
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("login")]
         public IActionResult Login(string username, string password)

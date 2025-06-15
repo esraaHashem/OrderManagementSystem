@@ -25,68 +25,67 @@ public class OrderManagementDBContext : DbContext
                 new Customer { Id = 3, Name = "Mike Johnson", CustomerType = CustomerType.VIP },
                 new Customer { Id = 4, Name = "Sarah Williams", CustomerType = CustomerType.New }
             };
+        var now = DateTime.Now;
+        modelBuilder.Entity<Order>().HasData(
+            new Order
+            {
+                Id = 1,
+                CustomerId = 1,
+                OrderStatus = OrderStatus.Delivered,
+                OrderDate = now.AddDays(-10),
+                LastModified = now.AddDays(-9)
+            },
+            new Order
+            {
+                Id = 2,
+                CustomerId = 2,
+                OrderStatus = OrderStatus.Delivered,
+                OrderDate = now.AddDays(-8),
+                LastModified = now.AddDays(-6)
+            },
+            new Order
+            {
+                Id = 3,
+                CustomerId = 3,
+                OrderStatus = OrderStatus.Delivered,
+                OrderDate = now.AddDays(-5),
+                LastModified = now.AddDays(-4)
+            },
+            new Order
+            {
+                Id = 4,
+                CustomerId = 1,
+                OrderStatus = OrderStatus.Shipped,
+                OrderDate = now.AddDays(-3),
+                LastModified = now.AddDays(-2)
+            },
+            new Order
+            {
+                Id = 5,
+                CustomerId = 2,
+                OrderStatus = OrderStatus.Pending,
+                OrderDate = now.AddDays(-2),
+                LastModified = now.AddDays(-2)
+            },
+            new Order
+            {
+                Id = 6,
+                CustomerId = 3,
+                OrderStatus = OrderStatus.Created,
+                OrderDate = now.AddHours(-2),
+                LastModified = now.AddHours(-2)
+            }
+        );
 
-        var orderItems = new List<OrderItem>
-                {
-                    new OrderItem { Id = 1,OrderId =1, ItemNumber = "ITEM-001", Name = "Laptop", Description = "15-inch, 16GB RAM, 512GB SSD", Price = 999.99m, Quantity = 1 },
-                    new OrderItem { Id = 2,OrderId =1, ItemNumber = "ITEM-002", Name = "Mouse", Description = "Wireless Optical Mouse", Price = 19.99m, Quantity = 2 },
-                    new OrderItem { Id = 3, OrderId = 2, ItemNumber = "ITEM-003", Name = "Keyboard", Description = "Mechanical Keyboard", Price = 89.99m, Quantity = 1 },
-                    new OrderItem { Id = 4,OrderId = 2, ItemNumber = "ITEM-004", Name = "Monitor", Description = "27-inch 4K Monitor", Price = 399.99m, Quantity = 1 },
-                    new OrderItem { Id = 5,OrderId = 3, ItemNumber = "ITEM-005", Name = "Headphones", Description = "Noise Cancelling Headphones", Price = 199.99m, Quantity = 1 }
-                };
-
-        var orders = new List<Order>
-                {
-                    new Order
-                    {
-                        Id = 1,
-                        CustomerId = 1,
-                        OrderStatus = OrderStatus.Delivered,
-                        OrderDate = DateTime.Now.AddDays(-10),
-                        Items = new List<OrderItem> { orderItems[0], orderItems[1] }
-                    },
-                    new Order
-                    {
-                        Id = 2,
-                        CustomerId = 2,
-                        OrderStatus = OrderStatus.Shipped,
-                        OrderDate = DateTime.Now.AddDays(-5),
-                        Items = new List<OrderItem> { orderItems[2], orderItems[3] }
-                    },
-                    new Order
-                    {
-                        Id = 3,
-                        CustomerId = 3,
-                        OrderDate = DateTime.Now.AddHours(-10),
-                        OrderStatus = OrderStatus.Pending,
-                        Items = new List<OrderItem> { orderItems[4] }
-                    },
-
-                    new Order
-                    {
-                        Id = 4,
-                        CustomerId = 1,
-                        OrderStatus = OrderStatus.Shipped,
-                        OrderDate = DateTime.Now.AddDays(-1),
-                        Items = new List<OrderItem> { orderItems[0], orderItems[1] }
-                    }
-                    ,
-                    new Order
-                    {
-                        Id = 5,
-                        CustomerId = 2,
-                        OrderStatus = OrderStatus.Pending,
-                        OrderDate = DateTime.Now.AddDays(-2),
-                        Items = new List<OrderItem> { orderItems[2], orderItems[3] }
-                    },
-                    new Order
-                    {
-                        Id = 6,
-                        OrderDate = DateTime.Now.AddHours(-2),
-                        CustomerId = 3,
-                        OrderStatus = OrderStatus.Created,
-                        Items = new List<OrderItem> { orderItems[4] }
-                    },
-                };
+        modelBuilder.Entity<OrderItem>().HasData(
+            new OrderItem { Id = 1, OrderId = 1, Name = "Laptop", Price = 999.99m, Quantity = 1 },
+            new OrderItem { Id = 2, OrderId = 1, Name = "Mouse", Price = 19.99m, Quantity = 2 },
+            new OrderItem { Id = 3, OrderId = 2, Name = "Keyboard", Price = 89.99m, Quantity = 1 },
+            new OrderItem { Id = 4, OrderId = 2, Name = "Monitor", Price = 399.99m, Quantity = 1 },
+            new OrderItem { Id = 5, OrderId = 3, Name = "Headphones", Price = 199.99m, Quantity = 1 },
+            new OrderItem { Id = 6, OrderId = 4, Name = "USB Hub", Price = 50.00m, Quantity = 3 },
+            new OrderItem { Id = 7, OrderId = 5, Name = "Webcam", Price = 75.50m, Quantity = 1 },
+            new OrderItem { Id = 8, OrderId = 6, Name = "External SSD", Price = 100.00m, Quantity = 2 }
+        );
     }
 }

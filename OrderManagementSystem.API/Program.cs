@@ -1,4 +1,5 @@
 using OrderManagementSystem.API;
+using OrderManagementSystem.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +9,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddAppDBContext()
-                .AddSwaggerDocumentation()
-                .AddAppCustomExceptionHandler();
+builder.AddJWTAuthentication()
+       .AddAppDBContext()
+       .AddSwaggerDocumentation()
+       .AddAppCustomExceptionHandler()
+       .AddServices();
 
 var app = builder.Build();
 
@@ -25,8 +28,16 @@ app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Ensure database is initialized and seed data
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<OrderManagementDBContext>();
+    context.Database.EnsureCreated();
+}
 
 app.Run();

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OrderManagementSystem.Application.Discounting;
 using OrderManagementSystem.Application.Order;
@@ -18,7 +19,7 @@ namespace OrderManagementSystem.API
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection InjectServices(this IServiceCollection services)
+        public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IDiscountStrategy, NewCustomerDiscountStrategy>();
 
@@ -28,7 +29,7 @@ namespace OrderManagementSystem.API
 
             services.AddScoped<IDiscountStrategy, VIPCustomerDiscountStrategy>();
 
-            services.AddSingleton<IOrderService, OrderService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             return services;
         }
@@ -80,7 +81,7 @@ namespace OrderManagementSystem.API
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static IServiceCollection InjectJWTAuthentication(this WebApplicationBuilder builder)
+        public static IServiceCollection AddJWTAuthentication(this WebApplicationBuilder builder)
         {
             var jwtSecretKey = builder.Configuration["JwtSettings:SecretKey"];
             var jwtIssuer = builder.Configuration["JwtSettings:Issuer"];

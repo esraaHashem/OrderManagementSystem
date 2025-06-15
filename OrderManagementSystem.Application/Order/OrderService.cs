@@ -37,9 +37,10 @@ namespace OrderManagementSystem.Application.Order
             return Math.Max(0, discountedAmount);
         }
 
+        //
         public async Task<OrderAnalytics> GetOrderAnalyticsAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
-            var query = _orderManagementDBContext.Orders.AsQueryable();
+            var query = _orderManagementDBContext.Orders.Include(x => x.Items).AsNoTracking().AsQueryable();
 
             if (startDate.HasValue)
             {
@@ -59,7 +60,7 @@ namespace OrderManagementSystem.Application.Order
             {
                 AverageOrderValue = orders.Any() ? orders.Average(x => x.TotalAmount) : 0,
                 AverageFulfillmentTime =
-                deliveredOrders.Any() ? TimeSpan.FromMilliseconds(deliveredOrders.Average(o => (o.LastModified - o.LastModified).TotalMilliseconds))
+                deliveredOrders.Any() ? TimeSpan.FromMilliseconds(deliveredOrders.Average(o => (o.LastModified - o.OrderDate).TotalMilliseconds))
                                      : TimeSpan.Zero,
                 TotalOrders = orders.Count,
                 CompletedOrders = deliveredOrders.Count

@@ -11,13 +11,13 @@ namespace OrderManagementSystem.API.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Route("/api/Orders")]
+    [Route("/api/orders")]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
 
         /// <summary>
-        ///
+        /// controller responsible for managing order functionality
         /// </summary>
         /// <param name="orderService"></param>
         public OrdersController(IOrderService orderService)
@@ -26,7 +26,7 @@ namespace OrderManagementSystem.API.Controllers
         }
 
         /// <summary>
-        /// endpoint that returns orders analytics (e.g., average value, fulfillment time).
+        ///Returns orders analytics (e.g., average value, fulfillment time).
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -42,7 +42,7 @@ namespace OrderManagementSystem.API.Controllers
         }
 
         /// <summary>
-        ///
+        /// Update status of order.
         /// </summary>
         /// <param name="orderId"></param>
         /// <param name="status"></param>
