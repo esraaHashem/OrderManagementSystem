@@ -2,7 +2,7 @@
 
 namespace OrderManagementSystem.Application.Discounting;
 
-public class RegularCustomerDiscount : IDiscountStrategy
+public class RegularCustomerDiscountStrategy : IDiscountStrategy
 {
     public decimal BaseDiscount => 0.95M;
     public int DiscountEligibilityMonths => -6;

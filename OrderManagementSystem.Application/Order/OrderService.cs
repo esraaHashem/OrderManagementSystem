@@ -116,10 +116,10 @@ namespace OrderManagementSystem.Application.Order
         {
             return type switch
             {
-                CustomerType.New => new NewCustomerDiscount(),
-                CustomerType.Loyal => new LoyalCustomerDiscount(),
-                CustomerType.Regular => new RegularCustomerDiscount(),
-                CustomerType.VIP => new VIPCustomerDiscount(),
+                CustomerType.New => new NewCustomerDiscountStrategy(),
+                CustomerType.Loyal => new LoyalCustomerDiscountStrategy(),
+                CustomerType.Regular => new RegularCustomerDiscountStrategy(),
+                CustomerType.VIP => new VIPCustomerDiscountStrategy(),
                 _ => throw new ArgumentException("Invalid customer type")
             };
         }

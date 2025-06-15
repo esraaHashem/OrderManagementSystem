@@ -2,7 +2,7 @@
 
 namespace OrderManagementSystem.Application.Discounting;
 
-public class NewCustomerDiscount : IDiscountStrategy
+public class NewCustomerDiscountStrategy : IDiscountStrategy
 {
     public decimal BaseDiscount => 0.90M;
     public int DiscountEligibilityMonths => -3;
@@ -14,7 +14,7 @@ public class NewCustomerDiscount : IDiscountStrategy
         decimal extraDiscountInPercentage = ApplyExtraDiscount(orderHistory);
         baseDiscountedAmount *= (1 - extraDiscountInPercentage / 100M);
 
-        return baseDiscountedAmount;
+        return Math.Round(baseDiscountedAmount, 2);
     }
 
     //extra discount implemetation would be different depends on business logic

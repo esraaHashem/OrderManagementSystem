@@ -2,9 +2,9 @@
 
 namespace OrderManagementSystem.Application.Discounting;
 
-public class VIPCustomerDiscount : IDiscountStrategy
+public class LoyalCustomerDiscountStrategy : IDiscountStrategy
 {
-    public decimal BaseDiscount => 0.80M;
+    public decimal BaseDiscount => 0.85M;
     public int DiscountEligibilityMonths => -12;
 
     public decimal ApplyDiscount(decimal amount, List<Core.Order> orderHistory)
@@ -23,9 +23,9 @@ public class VIPCustomerDiscount : IDiscountStrategy
         var discountEligibilityCutoff = DateTime.UtcNow.AddMonths(DiscountEligibilityMonths);
 
         var recentOrders = orderHistory.Where(order => order.OrderDate >= discountEligibilityCutoff)
-        .ToList();
+            .ToList();
 
-        if (!DiscountRules.DISCOUNTS_OVER_PURCHASES_HISTORY.TryGetValue(CustomerType.VIP, out var discountTiers))
+        if (!DiscountRules.DISCOUNTS_OVER_PURCHASES_HISTORY.TryGetValue(CustomerType.Loyal, out var discountTiers))
         {
             return 0m;
         }

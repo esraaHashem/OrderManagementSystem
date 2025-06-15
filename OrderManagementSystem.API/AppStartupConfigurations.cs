@@ -20,13 +20,13 @@ namespace OrderManagementSystem.API
         /// <returns></returns>
         public static IServiceCollection InjectServices(this IServiceCollection services)
         {
-            services.AddScoped<IDiscountStrategy, NewCustomerDiscount>();
+            services.AddScoped<IDiscountStrategy, NewCustomerDiscountStrategy>();
 
-            services.AddScoped<IDiscountStrategy, LoyalCustomerDiscount>();
+            services.AddScoped<IDiscountStrategy, LoyalCustomerDiscountStrategy>();
 
-            services.AddScoped<IDiscountStrategy, RegularCustomerDiscount>();
+            services.AddScoped<IDiscountStrategy, RegularCustomerDiscountStrategy>();
 
-            services.AddScoped<IDiscountStrategy, VIPCustomerDiscount>();
+            services.AddScoped<IDiscountStrategy, VIPCustomerDiscountStrategy>();
 
             services.AddSingleton<IOrderService, OrderService>();
 

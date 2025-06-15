@@ -12,7 +12,7 @@ public class VIPCustomerDiscountTests
         // Arrange
         decimal amount = 200M;
         List<Order> orderHistory = new List<Order>();
-        var sut = new VIPCustomerDiscount();
+        var sut = new VIPCustomerDiscountStrategy();
 
         // Act
         var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
@@ -25,7 +25,7 @@ public class VIPCustomerDiscountTests
     public void WhenVIPPurchasesAre100OrdersOverLastYearThenNearestDiscountIs10Percentage()
     {
         // Arrange
-        var sut = new VIPCustomerDiscount();
+        var sut = new VIPCustomerDiscountStrategy();
         decimal amount = 200M;
 
         List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyYears: 1);
@@ -41,7 +41,7 @@ public class VIPCustomerDiscountTests
     public void WhenVIPPurchasesAre100OrdersOverLastTwoYearThenNearestDiscountIs5Percentage()
     {
         // Arrange
-        var sut = new VIPCustomerDiscount();
+        var sut = new VIPCustomerDiscountStrategy();
         decimal amount = 200M;  //200*0.80 = 160 , 160 * 1-(5/100) = 152
 
         List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyYears: 2);
@@ -57,7 +57,7 @@ public class VIPCustomerDiscountTests
     public void WhenVIPPurchasesAre100OrdersOverLastThreeYearThenNoExtraDiscountIsApplied()
     {
         // Arrange
-        var sut = new VIPCustomerDiscount();
+        var sut = new VIPCustomerDiscountStrategy();
         decimal amount = 200M;  //200*0.80 = 160 , 160 * 1-(5/100) = 152
 
         List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyYears: 4);
@@ -75,7 +75,7 @@ public class VIPCustomerDiscountTests
         // Arrange
         decimal amount = 1000M;
         List<Order> orderHistory = TestDataGenerator.GetOrders(500, 1);
-        var sut = new VIPCustomerDiscount();
+        var sut = new VIPCustomerDiscountStrategy();
 
         // Act
         var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
