@@ -1,10 +1,10 @@
 ﻿using OrderManagementSystem.Application.Discounting;
 using OrderManagementSystem.Core;
 
-namespace OrderManagementSystem.Test;
+namespace OrderManagementSystem.Test.DiscountStrategies;
 
 [TestClass]
-public class NewCustomerDicountTests
+public class NewCustomerDicountStrategyTests
 {
     [TestMethod]
     public void WhenApplyDiscountForNewCustomerWithNoRecentOrdersThen10PercentageDiscountIsApplied()
@@ -28,7 +28,7 @@ public class NewCustomerDicountTests
         var sut = new NewCustomerDiscountStrategy();
         decimal amount = 200M;
 
-        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 60, overHowManyYears: 0);
+        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 60, overHowManyMonths: 3);
 
         // Act
         var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
@@ -44,7 +44,7 @@ public class NewCustomerDicountTests
         var sut = new NewCustomerDiscountStrategy();
         decimal amount = 200M;
 
-        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyYears: 0);
+        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyMonths: 3);
 
         // Act
         var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
@@ -60,7 +60,7 @@ public class NewCustomerDicountTests
         var sut = new NewCustomerDiscountStrategy();
         decimal amount = 200M;
 
-        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 40, overHowManyYears: 0);
+        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 40, overHowManyMonths: 4);
 
         // Act
         var discountedAmount = sut.ApplyDiscount(amount, orderHistory);

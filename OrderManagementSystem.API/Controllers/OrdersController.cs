@@ -11,7 +11,7 @@ namespace OrderManagementSystem.API.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Route("/api/orders")]
+    [Route("/api/v1/orders")]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -32,7 +32,7 @@ namespace OrderManagementSystem.API.Controllers
         /// <param name="endDate"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("/api/analytics/orders")]
+        [Route("/api/v1/analytics/orders")]
         [SwaggerResponse(StatusCodes.Status200OK, "Successfully returned orders analytics ", typeof(OrderAnalytics))]
         public async Task<IActionResult> GetOrderAnalytics(DateTime? startDate, DateTime? endDate)
         {

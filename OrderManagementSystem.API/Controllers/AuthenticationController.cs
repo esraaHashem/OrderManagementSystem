@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OrderManagementSystem.API.Controllers
 {
-    [Route("api/authentication")]
+    [Route("api/v1/authentication")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace OrderManagementSystem.API.Controllers
         }
 
         /// <summary>
-        /// endpoint to authenticate user and get token to be used of his coming requests
+        /// endpoint to authenticate user and get token to be used for his coming requests
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>

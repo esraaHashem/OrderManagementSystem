@@ -1,10 +1,10 @@
 using OrderManagementSystem.Application.Discounting;
 using OrderManagementSystem.Core;
 
-namespace OrderManagementSystem.Test;
+namespace OrderManagementSystem.Test.DiscountStrategies;
 
 [TestClass]
-public class VIPCustomerDiscountTests
+public class VIPCustomerDiscountStrategyTests
 {
     [TestMethod]
     public void WhenApplyDiscountForVIPCustomerThen20PercentageDiscountIsApplied()
@@ -28,7 +28,7 @@ public class VIPCustomerDiscountTests
         var sut = new VIPCustomerDiscountStrategy();
         decimal amount = 200M;
 
-        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyYears: 1);
+        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyMonths: 12);
 
         // Act
         var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
@@ -44,7 +44,7 @@ public class VIPCustomerDiscountTests
         var sut = new VIPCustomerDiscountStrategy();
         decimal amount = 200M;  //200*0.80 = 160 , 160 * 1-(5/100) = 152
 
-        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyYears: 2);
+        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyMonths: 24);
 
         // Act
         var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
@@ -60,7 +60,7 @@ public class VIPCustomerDiscountTests
         var sut = new VIPCustomerDiscountStrategy();
         decimal amount = 200M;  //200*0.80 = 160 , 160 * 1-(5/100) = 152
 
-        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyYears: 4);
+        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 100, overHowManyMonths: 48);
 
         // Act
         var discountedAmount = sut.ApplyDiscount(amount, orderHistory);
@@ -74,7 +74,7 @@ public class VIPCustomerDiscountTests
     {
         // Arrange
         decimal amount = 1000M;
-        List<Order> orderHistory = TestDataGenerator.GetOrders(500, 1);
+        List<Order> orderHistory = TestDataGenerator.GetOrders(howManyOrders: 500, overHowManyMonths: 12);
         var sut = new VIPCustomerDiscountStrategy();
 
         // Act
