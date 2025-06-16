@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postman", "postman", "{5348
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\Desktop\Assignment\to send\OrderManagementSystem.postman_collection.json = ..\..\..\Desktop\Assignment\to send\OrderManagementSystem.postman_collection.json
 		..\..\..\Desktop\Assignment\to send\OrderManagementSystem.postman_environment.json = ..\..\..\Desktop\Assignment\to send\OrderManagementSystem.postman_environment.json
+		Steps.md = Steps.md
 	EndProjectSection
 EndProject
 Global
