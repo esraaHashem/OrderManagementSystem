@@ -15,7 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderManagementSystem.Appli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderManagementSystem.Core", "OrderManagementSystem.Core\OrderManagementSystem.Core.csproj", "{8CA228CB-4F9D-49F4-9D33-DCCD9FA550FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderManagementSystem.Test", "OrderManagementSystem.Test\OrderManagementSystem.Test.csproj", "{583661BB-E06F-45F3-8DAE-AFDA95F6EF15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderManagementSystem.Test", "OrderManagementSystem.Test\OrderManagementSystem.Test.csproj", "{583661BB-E06F-45F3-8DAE-AFDA95F6EF15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postman", "postman", "{5348619B-AA3E-4D2F-B67D-10414112CCF2}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Desktop\Assignment\to send\OrderManagementSystem.postman_collection.json = ..\..\..\Desktop\Assignment\to send\OrderManagementSystem.postman_collection.json
+		..\..\..\Desktop\Assignment\to send\OrderManagementSystem.postman_environment.json = ..\..\..\Desktop\Assignment\to send\OrderManagementSystem.postman_environment.json
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
