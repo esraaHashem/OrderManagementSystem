@@ -35,6 +35,7 @@ for simulation discounting functionality classes have been introduce and they ar
 - introduced discountRules as mentioned in the above table showing and that for demonstration, it can have different business rules
 - IOrderService/OrderService are implemented to calculate discount as it determine which startegy to use and pass it to the context to apply discount, also added feature update status of order with simple validation if status can be applied or custom exception is raised if transition is invalid 
 - feature getting order analytics is introduced, getting order amount average, total orders count, fullfillment average time.
+- added caching feature.
 
 **API layer:**
 - Organized services injections as extension methods to have a cleaned programs.cs
@@ -67,3 +68,9 @@ for simulation discounting functionality classes have been introduce and they ar
     "Username": "admin" // for demo
   }
 }
+
+**Performance Considerations**
+- Rate limiting is implemented.
+- AsNoTracking() is used for analytics query.
+- In-memory DB for development.
+- Caching is implemented.
