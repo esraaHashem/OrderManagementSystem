@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using OrderManagementSystem.Application.Discounting;
 using OrderManagementSystem.Application.Exceptions;
 using OrderManagementSystem.Core;
 using OrderManagementSystem.Infrastructure.Data;
+using System.Text.Json;
 
 namespace OrderManagementSystem.Application.Order
 {
@@ -11,11 +13,13 @@ namespace OrderManagementSystem.Application.Order
     {
         private readonly ILogger<OrderService> _logger;
         private readonly OrderManagementDBContext _orderManagementDBContext;
+        private readonly IMemoryCache _cache;
 
-        public OrderService(ILogger<OrderService> logger, OrderManagementDBContext orderManagementDBContext)
+        public OrderService(ILogger<OrderService> logger, OrderManagementDBContext orderManagementDBContext, IMemoryCache cache)
         {
             _logger = logger;
             _orderManagementDBContext = orderManagementDBContext;
+            _cache = cache;
         }
 
         public decimal CalculateTotalAmount(Core.Order order)
@@ -40,31 +44,56 @@ namespace OrderManagementSystem.Application.Order
         //
         public async Task<OrderAnalytics> GetOrderAnalyticsAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
-            var query = _orderManagementDBContext.Orders.Include(x => x.Items).AsNoTracking().AsQueryable();
+            _logger.LogInformation($"----- Starting call of {nameof(GetOrderAnalyticsAsync)}- {nameof(OrderService)}");
 
-            if (startDate.HasValue)
+            //try get from cache first
+            var cacheKey = $"analytics_{startDate?.ToString("yyyyMMdd")}_{endDate?.ToString("yyyyMMdd")}";
+            var cacheParameters = new CacheParameters<string, OrderAnalytics> { Key = cacheKey };
+            var (isCached, CachedData) = CacheExtensionMethods.GetData(cacheParameters, _cache);
+
+            if (isCached && CachedData is not null)
             {
-                query = query.Where(o => o.OrderDate >= startDate.Value);
+                return CachedData;
             }
-
-            if (endDate.HasValue)
+            else
             {
-                query = query.Where(o => o.OrderDate <= endDate.Value);
+                var query = _orderManagementDBContext.Orders.Include(x => x.Items).AsNoTracking().AsQueryable();
+                if (startDate.HasValue) query = query.Where(o => o.OrderDate >= startDate.Value);
+                if (endDate.HasValue) query = query.Where(o => o.OrderDate <= endDate.Value);
+
+                var orders = await query.ToListAsync();
+
+                var deliveredOrders = orders.Where(o => o.OrderStatus == OrderStatus.Delivered).ToList();
+
+                var orderAnalytics = new OrderAnalytics
+                {
+                    AverageOrderValue = orders.Any() ? orders.Average(x => x.TotalAmount) : 0,
+                    AverageFulfillmentTime =
+                    deliveredOrders.Any() ? TimeSpan.FromMilliseconds(deliveredOrders.Average(o => (o.LastModified - o.OrderDate).TotalMilliseconds))
+                                         : TimeSpan.Zero,
+                    TotalOrders = orders.Count,
+                    CompletedOrders = deliveredOrders.Count
+                };
+
+                //add to cache
+                var cachedParameters = new CacheParameters<string, OrderAnalytics> { Key = cacheKey, Value = orderAnalytics };
+                CacheExtensionMethods.SetData(cachedParameters, _cache);
+
+                _logger.LogInformation($"----- Finishing call of {nameof(GetOrderAnalyticsAsync)}- {nameof(OrderService)}");
+
+                return orderAnalytics;
             }
+        }
 
-            var orders = await query.ToListAsync();
+        private (bool, OrderAnalytics?) GetCachedData(DateTime? startDate, DateTime? endDate)
+        {
+            var cacheKey = $"analytics_{startDate?.ToString("yyyyMMdd")}_{endDate?.ToString("yyyyMMdd")}";
 
-            var deliveredOrders = orders.Where(o => o.OrderStatus == OrderStatus.Delivered).ToList();
+            _logger.LogInformation($"----- Trying Get Cached Analytics of key call of {cacheKey}");
 
-            return new OrderAnalytics
-            {
-                AverageOrderValue = orders.Any() ? orders.Average(x => x.TotalAmount) : 0,
-                AverageFulfillmentTime =
-                deliveredOrders.Any() ? TimeSpan.FromMilliseconds(deliveredOrders.Average(o => (o.LastModified - o.OrderDate).TotalMilliseconds))
-                                     : TimeSpan.Zero,
-                TotalOrders = orders.Count,
-                CompletedOrders = deliveredOrders.Count
-            };
+            var cacheParameters = new CacheParameters<string, OrderAnalytics> { Key = cacheKey };
+
+            return CacheExtensionMethods.GetData(cacheParameters, _cache);
         }
 
         public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)

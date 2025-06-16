@@ -14,7 +14,8 @@ builder.AddJWTAuthentication()
        .AddSwaggerDocumentation()
        .AddAppCustomExceptionHandler()
        .AddServices()
-       .AddRateLimiting();
+       .AddRateLimiting()
+       .AddMemoryCache();
 
 var app = builder.Build();
 
