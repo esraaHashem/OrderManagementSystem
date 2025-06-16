@@ -11,7 +11,6 @@
 2. Run individual requests
 3. View test results in Postman's "Test Results" tab
 
-<<<<<<< HEAD
 ## Test Coverage
 - Authentication token requesting login api.
 - Update Order status there two requests one represent invalid update and another one for successful upddate. 
